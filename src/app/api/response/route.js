@@ -40,7 +40,7 @@ async function waitForFilesActive(files) {
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction: "You are an intelligent chatbot designed to assist students with a wide range of inquiries related to college matters.\nYour responses should be based solely on the provided dataset files of frequently asked questions (FAQs) and their answers, as well as raw dataset files.\n\nIf the question asked is outside the scope of the provided dataset, please respond with: \"Thank you for your question, but I cannot provide information on that topic as it falls outside my training data.\"\n\nDataset:\n\nQ: What is the meaning of \"Debarred\" in the context of students?\nA: Those students who fail in the 3 criteria mentioned by the EMS profile.\n\nQ: How many semesters can be affected if a student is debarred?\nA: Existing semester only.\n\nQ: Are there any ways for students to get exempted from debarment?\nA: They can contact their HoD.\n\nQ: What are the common reasons for students to be debarred from examinations?\nA: \"Please refer to letter no. ...\"\n\nQ: Can you provide more details on the reasons for debarment, such as low attendance, fee dues, or disciplinary actions?\nA: Contact your institute for further details.\n\nQ: How can students prevent or avoid being debarred from examinations?\nA:\n(1) By paying prescribed fee on time.\n(2) By conforming to rules and regulations of the institute.\n(3) By having 75% attendance.\n\nQ: What should a student do if they believe they have been wrongly debarred?\nA: They can contact their HoD.\n\nQ: Are there any academic or disciplinary consequences for debarred students apart from missing exams?\nA: NO.\n\nBased on the dataset files provided, answer the following question from the student in the best way possible, ensuring clarity and understanding.\nStudent Query:\n",
+  systemInstruction: "You are an intelligent chatbot designed to assist students with a wide range of inquiries related to college matters with proper detail or context.\nYour responses should be based solely on the provided dataset files of frequently asked questions (FAQs) and their answers, as well as raw dataset files.\n\nIf the question asked is outside the scope of the provided dataset, please respond with: \"Thank you for your question, but I cannot provide information on that topic as it falls outside my training data.\"\n\nDataset:\n\nQ: What is the meaning of \"Debarred\" in the context of students?\nA: Those students who fail in the 3 criteria mentioned by the EMS profile.\n\nQ: How many semesters can be affected if a student is debarred?\nA: Existing semester only.\n\nQ: Are there any ways for students to get exempted from debarment?\nA: They can contact their HoD.\n\nQ: What are the common reasons for students to be debarred from examinations?\nA: \"Please refer to letter no. ...\"\n\nQ: Can you provide more details on the reasons for debarment, such as low attendance, fee dues, or disciplinary actions?\nA: Contact your institute for further details.\n\nQ: How can students prevent or avoid being debarred from examinations?\nA:\n(1) By paying prescribed fee on time.\n(2) By conforming to rules and regulations of the institute.\n(3) By having 75% attendance.\n\nQ: What should a student do if they believe they have been wrongly debarred?\nA: They can contact their HoD.\n\nQ: Are there any academic or disciplinary consequences for debarred students apart from missing exams?\nA: NO.\n\nBased on the dataset files provided, answer the following question from the student in the best way possible, ensuring clarity and understanding.\nStudent Query:\n",
 });
 
 const generationConfig = {
@@ -68,11 +68,9 @@ export async function POST(request) {
       return NextResponse.json({ error: "Query parameter 'q' is required." }, { status: 400 });
     }
 
-    const files = [
-      await uploadToGemini("./public/dataset/Debarred_Student_FAQ_CollegeBoard_Dataset.txt", "text/plain"),
-    ];
+    // const files = [ await uploadToGemini("./public/dataset/Debarred_Student_FAQ_CollegeBoard_Dataset.txt", "text/plain"),];
 
-    await waitForFilesActive(files);
+    // await waitForFilesActive(files);
 
     const history = chatHistory.map((message) => ({
       role: message.type === "user" ? "user" : "model",
@@ -83,7 +81,7 @@ export async function POST(request) {
     const chatSession = model.startChat({
       generationConfig,
       history: [
-        {
+        /*{
           role: "user",
           parts: [
             {
@@ -93,7 +91,7 @@ export async function POST(request) {
               },
             },
           ],
-        },
+        },*/
         ...history,
       ],
     });
