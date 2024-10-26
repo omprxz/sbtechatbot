@@ -1,0 +1,30 @@
+{
+  "name": "sbte_chatbot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.7.7",
+    "jsonrepair": "^3.9.0",
+    "lucide-react": "^0.453.0",
+    "next": "15.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-markdown": "^9.0.1"
+  },
+  "devDependencies": {
+    "daisyui": "^4.12.13",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.1",
+    "postcss": "^8",
+    "tailwind-scrollbar": "^3.1.0",
+    "tailwindcss": "^3.4.1"
+  }
+}
