@@ -58,7 +58,7 @@ export async function POST(request) {
 
           for await (const chunk of result.stream) {
             const chunkText = chunk.candidates[0].content.parts[0].text;
-            controller.enqueue(encoder.encode(`data: ${chunkText}`));
+            controller.enqueue(encoder.encode(`${chunkText}`));
           }
 
           controller.close();
