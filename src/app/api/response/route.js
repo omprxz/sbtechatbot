@@ -1,83 +1,70 @@
-// src/app/api/generateResponse.js
 import { NextResponse } from 'next/server';
-import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from '@google/generative-ai';
-import { GoogleAIFileManager } from '@google/generative-ai/server';
-import { jsonrepair } from 'jsonrepair';
-
-const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
-const fileManager = new GoogleAIFileManager(apiKey);
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  systemInstruction: `You are an intelligent chatbot designed to assist students with a wide range of inquiries related to college matters with proper detail or context...
-  Student Query:`,
-});
-
-const generationConfig = {
-  temperature: 1,
-  topP: 0.95,
-  topK: 64,
-  maxOutputTokens: 8192,
-  responseMimeType: "text/plain",
-};
+import { db } from '@/lib/db';
+import natural from 'natural';
 
 export async function POST(request) {
-  const { q: studentQuery, history: chatHistory } = await request.json();
-  if (!studentQuery) {
-    return NextResponse.json({ error: "Query parameter 'q' is required." }, { status: 400 });
-  }
-
   try {
-    let chatSession;
-    if (chatHistory) {
-      const history = chatHistory.map((message) => ({
-        role: message.type === "user" ? "user" : "model",
-        parts: [{ text: message?.message }],
-      }));
-      chatSession = model.startChat({
-        generationConfig,
-        history,
-      });
-    } else {
-      chatSession = model.startChat({
-        generationConfig,
-      });
+    const connection = await db();
+    const [rows] = await connection.query(
+      "SELECT question, answer FROM dataset_questions WHERE status = 'active'"
+    );
+
+    const { question: userQuestion, ip, chatId } = await request.json();
+    if (!userQuestion) {
+      return NextResponse.json(
+        { error: "User question is required" },
+        { status: 400 }
+      );
     }
 
-    const encoder = new TextEncoder();
+    const classifier = new natural.BayesClassifier();
+    rows.forEach(({ question, answer }) =>
+      classifier.addDocument(question, answer)
+    );
+    classifier.train();
 
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          const result = await chatSession.sendMessageStream(studentQuery);
+    const confidenceScores = classifier.getClassifications(userQuestion);
+    const bestMatch = confidenceScores.reduce((max, current) =>
+      current.value > max.value ? current : max
+    );
 
-          for await (const chunk of result.stream) {
-            const chunkText = chunk.candidates[0].content.parts[0].text;
-            controller.enqueue(encoder.encode(`${chunkText}`));
-          }
+    let finalAnswer;
+    if (bestMatch.value > 0) {
+      finalAnswer = bestMatch.label;
+    } else {
+      finalAnswer = "I am trained enough to answer it. I am still in the learning phase.";
+    }
 
-          controller.close();
-        } catch (error) {
-          console.error("Error in streaming response:", error);
-          controller.error(error);
-        }
-      },
-    });
+    const messageSql = `INSERT INTO chatbot_questions (question, ip, chat_id) VALUES (?, ?, ?)`;
+    const [messageResult] = await connection.execute(messageSql, [
+      userQuestion,
+      ip,
+      Number(chatId),
+    ]);
 
-    return new NextResponse(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
+    const updateAnswerSql = `UPDATE chatbot_questions SET answer = ? WHERE id = ?`;
+    await connection.execute(updateAnswerSql, [
+      finalAnswer,
+      messageResult.insertId,
+    ]);
+
+    const appendToChatSql = `
+      UPDATE chat_sessions 
+      SET msg_ids = COALESCE(
+          JSON_ARRAY_APPEND(msg_ids, '$', CAST(? AS UNSIGNED)), 
+          JSON_ARRAY(CAST(? AS UNSIGNED))
+      ) 
+      WHERE id = ?;
+    `;
+    await connection.execute(appendToChatSql, [
+      messageResult.insertId,
+      messageResult.insertId,
+      chatId,
+    ]);
+
+    return NextResponse.json({ answer: finalAnswer });
   } catch (error) {
     console.error("Error generating response:", error);
-    return NextResponse.json({ response: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

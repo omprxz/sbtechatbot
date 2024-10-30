@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SendHorizontal, LoaderCircle } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import ReactMarkdown from "react-markdown";
 import axios from 'axios'
 import Question from "../suggestedQuestions";
 
@@ -96,38 +97,37 @@ export default function Chat({ headers }) {
       toast("Please wait for the current question to finish.", { icon: "⏳" });
     }
   };
-
+  
   const sendMessageToApi = async (text, chatId) => {
-    try {
-      const response = await axios.post("/api/response", {
-        question: text,
-        history: messages,
-        ip: ip,
-        chatId: chatId
+    const response = await fetch("/api/response_gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: text, history: messages, ip: ip, chatId: chatId }),
+    });
+  
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let accumulatedMessage = "";
+  
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+  
+      accumulatedMessage += decoder.decode(value, { stream: true }).replace(/^data:\s/, '');
+  
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages];
+        if (updatedMessages.length === 0 || updatedMessages[updatedMessages.length - 1]?.type !== "bot") {
+          updatedMessages.push({ type: "bot", message: accumulatedMessage });
+        } else {
+          updatedMessages[updatedMessages.length - 1].message = accumulatedMessage;
+        }
+        return updatedMessages;
       });
-  
-      let answer = response?.data?.answer || "Something went wrong";
-      
-      try {
-        answer = JSON.parse(`"${answer.replace(/"/g, '\\"')}"`);
-        answer = answer.replace(/\n/g, '<br />');
-      } catch (parseError) {
-        console.error("Error parsing response:", parseError);
-      }
-  
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { type: "bot", message: answer }
-      ]);
-    } catch (error) {
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { type: "bot", message: error?.response?.data?.error || error?.message || "Something went wrong", isError: true }
-      ]);
     }
   };
   
-  
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && event.ctrlKey) {
       if (!isSending) {
@@ -208,11 +208,9 @@ export default function Chat({ headers }) {
           >
             <div className={message?.type === "user" ? userMessageStyle : botMessageStyle}>
               {message?.type === "bot" ? (
-                <div
-                className={`${message?.isError ? "text-red-500" : ""}`}
-                dangerouslySetInnerHTML={{ __html: message.message }}
-              ></div>
-              
+                <ReactMarkdown className={`${message?.isError ? "text-red-500" : ""}`}>
+                  {message.message}
+                </ReactMarkdown>
               ) : (
                 message?.message
               )}
