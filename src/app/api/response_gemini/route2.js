@@ -2,50 +2,10 @@ import { NextResponse } from 'next/server';
 import {
   GoogleGenerativeAI,
 } from '@google/generative-ai';
-import { GoogleAIFileManager } from '@google/generative-ai/server';
 import {db} from '@/lib/db';
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
-import { google } from 'googleapis';
-
-async function authorize() {
-    const googleApi = JSON.parse(process.env.DRIVE_CREDS);
-    const jwtClient = new google.auth.JWT(
-        googleApi.client_email,
-        null,
-        googleApi.private_key,
-        ['https://www.googleapis.com/auth/drive']
-    );
-    await jwtClient.authorize();
-    return jwtClient;
-}
-
-async function readFileContent(authClient, fileId) {
-    const drive = google.drive({ version: 'v3', auth: authClient });
-
-    return new Promise((resolve, reject) => {
-        drive.files.get(
-            { fileId: fileId, alt: 'media' },
-            { responseType: 'stream' },
-            (err, res) => {
-                if (err) return reject(err);
-
-                let fileData = '';
-                res.data
-                    .on('data', (chunk) => {
-                        fileData += chunk.toString();
-                    })
-                    .on('end', () => resolve(fileData))
-                    .on('error', reject);
-            }
-        );
-    });
-}
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const fileManager = new GoogleAIFileManager(apiKey);
 
 export async function POST(request) {
   const { q: studentQuery, history: chatHistory, ip, chatId } = await request.json();
