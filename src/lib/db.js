@@ -6,5 +6,6 @@ export const db = async () => {
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: "sbtechat",
+    port: process.env.MYSQL_PORT,
   });
 };
