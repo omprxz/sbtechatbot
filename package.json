@@ -15,6 +15,7 @@
     "jsonrepair": "^3.9.0",
     "lucide-react": "^0.453.0",
     "mysql2": "^3.11.3",
+    "natural": "^8.0.1",
     "next": "15.0.1",
     "node-nlp": "^4.27.0",
     "path": "^0.12.7",
