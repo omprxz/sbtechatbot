@@ -3,34 +3,68 @@ import Image from "next/image";
 import { SendHorizontal, LoaderCircle } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import axios from 'axios'
+import axios from "axios";
 import Question from "../suggestedQuestions";
 
 export default function Chat({ headers }) {
-  const [ip, setIp] = useState('');
-  const [chatId, setChatId] = useState('');
+  const [ip, setIp] = useState("");
+  const [chatId, setChatId] = useState("");
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [loadingDots, setLoadingDots] = useState("•");
-  const [quickQuestions, setQuickQuestions] = useState([
-    "What criteria must students meet to avoid being debarred?",
-    "If a student is debarred, will it affect their future semesters?",
-    "Who should a student contact if they wish to appeal against a debarment decision?",
-    "What actions can lead to a student being debarred from examinations?",
-    "Is there any impact on a student's academic record beyond missing exams if they are debarred?"
-  ]);
+  const [quickQuestions, setQuickQuestions] = useState([]);
 
-  
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    axios.get('/api/ip')
+    const handler = setTimeout(() => {
+      if (userInput.length >= 3) {
+        setDebouncedValue(userInput);
+      }
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [userInput]);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      getQuickInputQuestions(debouncedValue);
+    }
+  }, [debouncedValue]);
+
+  const getSuggestedQuestions = () => {
+    axios
+      .get("/api/question/suggest/5")
+      .then((response) => {
+        setQuickQuestions(
+          response.data.questions.map((question) => question.question)
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching quick questions:", error);
+        toast.error(
+          "Sorry, something went wrong while fetching suggested questions!"
+        );
+      });
+  };
+
+  useEffect(() => {
+    axios
+      .get("/api/ip")
       .then((response) => {
         setIp(response.data.ip);
       })
       .catch((error) => {
-        console.error('Error fetching IP:', error);
+        console.error("Error fetching IP:", error);
       });
+  }, []);
+
+  useEffect(() => {
+    getSuggestedQuestions();
   }, []);
 
   const messagesContainerRef = useRef(null);
@@ -42,6 +76,10 @@ export default function Chat({ headers }) {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleInputChange = (e) => {
+    setUserInput(e.target.value);
   };
 
   useEffect(() => {
@@ -67,7 +105,7 @@ export default function Chat({ headers }) {
         { type: "user", message: text },
       ]);
       setIsSending(true);
-  
+
       try {
         if (!chatId) {
           try {
@@ -76,21 +114,27 @@ export default function Chat({ headers }) {
             const newChatId = createChat.data.chatId;
             await sendMessageToApi(text, newChatId);
           } catch (error) {
-            throw new Error('Error creating chat session');
+            throw new Error("Error creating chat session");
           }
         } else {
           await sendMessageToApi(text, chatId);
         }
-  
+
         setIsSending(false);
+        inputRef.current.focus();
       } catch (error) {
         console.error("Error in handleSend:", error);
         toast.error("Sorry, something went wrong!");
         setMessages((prevMessages) => [
           ...prevMessages,
-          { type: "bot", message: error.message || "Sorry, something went wrong!", isError: true },
+          {
+            type: "bot",
+            message: error.message || "Sorry, something went wrong!",
+            isError: true,
+          },
         ]);
         setIsSending(false);
+        inputRef.current.focus();
       }
     } else {
       toast("Please wait for the current question to finish.", { icon: "⏳" });
@@ -103,31 +147,54 @@ export default function Chat({ headers }) {
         question: text,
         history: messages,
         ip: ip,
-        chatId: chatId
+        chatId: chatId,
       });
-  
+
       let answer = response?.data?.answer || "Something went wrong";
-      
+
       try {
         answer = JSON.parse(`"${answer.replace(/"/g, '\\"')}"`);
-        answer = answer.replace(/\n/g, '<br />');
+        answer = answer.replace(/\n/g, "<br />");
       } catch (parseError) {
         console.error("Error parsing response:", parseError);
       }
-  
-      setMessages(prevMessages => [
+
+      setMessages((prevMessages) => [
         ...prevMessages,
-        { type: "bot", message: answer }
+        { type: "bot", message: answer },
       ]);
     } catch (error) {
-      setMessages(prevMessages => [
+      setMessages((prevMessages) => [
         ...prevMessages,
-        { type: "bot", message: error?.response?.data?.error || error?.message || "Something went wrong", isError: true }
+        {
+          type: "bot",
+          message:
+            error?.response?.data?.error ||
+            error?.message ||
+            "Something went wrong",
+          isError: true,
+        },
       ]);
     }
   };
-  
-  
+
+  const getQuickInputQuestions = async (input) => {
+    try {
+      const response = await axios.post("/api/question/suggest/input", {
+        input,
+      });
+      if (response?.data?.questions) {
+        setQuickQuestions(
+          response.data.questions.map((question) => question.question)
+        );
+      } else {
+        getSuggestedQuestions();
+      }
+    } catch (err) {
+      getSuggestedQuestions();
+    }
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && event.ctrlKey) {
       if (!isSending) {
@@ -156,7 +223,12 @@ export default function Chat({ headers }) {
       {/* Header */}
       <div className="navbar bg-base-100 rounded-xl shadow-md p-4 flex items-center justify-between sticky top-2 z-10">
         <div className="flex items-center gap-2">
-          <Image src="/assets/sbtelogo.png" width={35} height={35} alt="SBTE Logo" />
+          <Image
+            src="/assets/sbtelogo.png"
+            width={35}
+            height={35}
+            alt="SBTE Logo"
+          />
           <span className="font-bold text-lg">SBTE Chatbot</span>
         </div>
         <button
@@ -191,7 +263,10 @@ export default function Chat({ headers }) {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative pt-8" ref={messagesContainerRef}>
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-4 relative pt-8"
+        ref={messagesContainerRef}
+      >
         {messages.length === 0 && (
           <Image
             src="/assets/sbtelogo.png"
@@ -204,25 +279,31 @@ export default function Chat({ headers }) {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message?.type === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              message?.type === "user" ? "justify-end" : "justify-start"
+            }`}
           >
-            <div className={message?.type === "user" ? userMessageStyle : botMessageStyle}>
+            <div
+              className={
+                message?.type === "user" ? userMessageStyle : botMessageStyle
+              }
+            >
               {message?.type === "bot" ? (
                 <div
-                className={`${message?.isError ? "text-red-500" : ""}`}
-                dangerouslySetInnerHTML={{ __html: message.message }}
-              ></div>
-              
+                  className={`${message?.isError ? "text-red-500" : ""}`}
+                  dangerouslySetInnerHTML={{ __html: message.message }}
+                ></div>
               ) : (
                 message?.message
               )}
-              
             </div>
           </div>
         ))}
         {isSending && (
           <div className="flex justify-start">
-            <div className={`${botMessageStyle} animate-pulse`}>{loadingDots}</div>
+            <div className={`${botMessageStyle} animate-pulse`}>
+              {loadingDots}
+            </div>
           </div>
         )}
       </div>
@@ -230,11 +311,17 @@ export default function Chat({ headers }) {
       {/* Input and Send Button */}
       <div className="sticky bottom-2 bg-base-100 rounded-xl p-4 shadow-md flex flex-col gap-y-4">
         {/* Suggested Questions */}
-        <div className="flex overflow-x-auto gap-2 pb-2">
-          {quickQuestions.map((question, index) => (
-            <Question key={index} text={question} handleQuickSend={handleQuickSend} />
-          ))}
-        </div>
+        {quickQuestions && quickQuestions.length > 0 && (
+          <div className="flex overflow-x-auto gap-2 pb-2">
+            {quickQuestions.map((question, index) => (
+              <Question
+                key={index}
+                text={question}
+                handleQuickSend={handleQuickSend}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Input Box */}
         <div className="flex items-center gap-2">
@@ -243,12 +330,15 @@ export default function Chat({ headers }) {
             className="flex-1 border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary transition duration-150"
             placeholder="Ask anything?"
             value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
+            ref={inputRef}
           />
           <button
             title="Send (CTRL + Enter)"
-            className={`p-2 rounded-full ${isSending ? "bg-neutral-content" : "bg-primary"}`}
+            className={`p-2 rounded-full ${
+              isSending ? "bg-neutral-content" : "bg-primary"
+            }`}
             disabled={isSending}
             onClick={() => handleSend(userInput)}
           >
