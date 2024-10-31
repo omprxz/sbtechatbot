@@ -160,8 +160,7 @@ export default function Chat({ headers }) {
       let answer = response?.data?.answer || "Something went wrong";
 
       try {
-        answer = JSON.parse(`"${answer.replace(/"/g, '\\"')}"`);
-        answer = answer.replace(/\n/g, "<br />");
+        answer = JSON.parse(JSON.stringify(answer));
       } catch (parseError) {
         console.error("Error parsing response:", parseError);
       }
