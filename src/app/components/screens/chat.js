@@ -5,6 +5,8 @@ import { useRef, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Question from "../suggestedQuestions";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Chat({ headers }) {
   const [ip, setIp] = useState("");
@@ -15,6 +17,7 @@ export default function Chat({ headers }) {
   const [isSending, setIsSending] = useState(false);
   const [loadingDots, setLoadingDots] = useState("•");
   const [quickQuestions, setQuickQuestions] = useState([]);
+  const [isFirst , setIsFirst] = useState(true);
 
   const inputRef = useRef(null);
 
@@ -22,6 +25,8 @@ export default function Chat({ headers }) {
     const handler = setTimeout(() => {
       if (userInput.length >= 3) {
         setDebouncedValue(userInput);
+      }else if(userInput.length === 0){
+        getSuggestedQuestions()
       }
     }, 400);
 
@@ -148,7 +153,9 @@ export default function Chat({ headers }) {
         history: messages,
         ip: ip,
         chatId: chatId,
+        isFirst: isFirst
       });
+      setIsFirst(false)
 
       let answer = response?.data?.answer || "Something went wrong";
 
@@ -183,15 +190,11 @@ export default function Chat({ headers }) {
       const response = await axios.post("/api/question/suggest/input", {
         input,
       });
-      if (response?.data?.questions) {
         setQuickQuestions(
           response.data.questions.map((question) => question.question)
         );
-      } else {
-        getSuggestedQuestions();
-      }
     } catch (err) {
-      getSuggestedQuestions();
+      await getSuggestedQuestions();
     }
   };
 
@@ -206,6 +209,8 @@ export default function Chat({ headers }) {
   const newChat = () => {
     setMessages([]);
     setUserInput("");
+    setChatId("")
+    setDebouncedValue("")
   };
 
   const handleQuickSend = (text) => {
@@ -216,7 +221,7 @@ export default function Chat({ headers }) {
   const userMessageStyle =
     "bg-primary text-white rounded-t-lg rounded-bl-lg w-4/5 p-3 mb-2 shadow-md animate-fadeIn";
   const botMessageStyle =
-    "bg-neutral-content text-black rounded-t-lg rounded-br-lg w-4/5 p-3 mb-2 shadow-sm animate-fadeIn";
+    "bg-neutral-content text-black rounded-t-lg rounded-br-lg w-4/5 p-3 mb-2 shadow-sm animate-fadeIn overflow-x-auto";
 
   return (
     <div className="flex flex-col h-screen bg-base-200 px-3 py-3 max-w-xl mx-auto overflow-hidden">
@@ -289,10 +294,8 @@ export default function Chat({ headers }) {
               }
             >
               {message?.type === "bot" ? (
-                <div
-                  className={`${message?.isError ? "text-red-500" : ""}`}
-                  dangerouslySetInnerHTML={{ __html: message.message }}
-                ></div>
+                <Markdown  remarkPlugins={[remarkGfm]} className={`${message?.isError ? "text-red-500" : ""}`}>{message.message}
+                </Markdown>
               ) : (
                 message?.message
               )}

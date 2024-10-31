@@ -1,0 +1,1136 @@
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "nlu": {
+      "log": false
+    },
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager",
+      "log": false
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "context,debar,in,is,mean,of,student,the,what": {
+            "intent": "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+            "domain": "default"
+          },
+          "a,affect,be,can,debar,how,if,is,many,semest,student": {
+            "intent": "Existing semester only.",
+            "domain": "default"
+          },
+          "any,are,debar,exempt,for,from,get,student,there,to,way": {
+            "intent": "They can contact their HoD.",
+            "domain": "default"
+          },
+          "are,be,common,debar,examin,for,from,reason,student,the,to,what": {
+            "intent": "Please refer to letter no. ...",
+            "domain": "default"
+          },
+          "action,as,attend,can,debar,detail,disciplinary,due,fee,for,low,more,on,or,provid,reason,such,the,you": {
+            "intent": "Contact your institute for further details.",
+            "domain": "default"
+          },
+          "avoid,be,can,debar,examin,from,how,or,prevent,student": {
+            "intent": "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+            "domain": "default"
+          },
+          "a,been,believ,debar,do,have,if,should,student,they,what,wrongly": {
+            "intent": "They can contact their HoD.",
+            "domain": "default"
+          },
+          "academ,any,apart,are,consequ,debar,disciplinary,exam,for,from,miss,or,student,there": {
+            "intent": "NO.",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "Those students who fail in the 3 criteria mentioned by the EMS profile.": "default",
+          "Existing semester only.": "default",
+          "They can contact their HoD.": "default",
+          "Please refer to letter no. ...": "default",
+          "Contact your institute for further details.": "default",
+          "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.": "default",
+          "NO.": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "What is the meaning of 'Debarred' in the context of students?",
+            "intent": "Those students who fail in the 3 criteria mentioned by the EMS profile."
+          },
+          {
+            "domain": "default",
+            "utterance": "How many semesters can be affected if a student is debarred?",
+            "intent": "Existing semester only."
+          },
+          {
+            "domain": "default",
+            "utterance": "Are there any ways for students to get exempted from debarment?",
+            "intent": "They can contact their HoD."
+          },
+          {
+            "domain": "default",
+            "utterance": "What are the common reasons for students to be debarred from examinations?",
+            "intent": "Please refer to letter no. ..."
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you provide more details on the reasons for debarment, such as low attendance, fee dues, or disciplinary actions?",
+            "intent": "Contact your institute for further details."
+          },
+          {
+            "domain": "default",
+            "utterance": "How can students prevent or avoid being debarred from examinations?",
+            "intent": "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+          },
+          {
+            "domain": "default",
+            "utterance": "What should a student do if they believe they have been wrongly debarred?",
+            "intent": "They can contact their HoD."
+          },
+          {
+            "domain": "default",
+            "utterance": "Are there any academic or disciplinary consequences for debarred students apart from missing exams?",
+            "intent": "NO."
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "what": 1,
+              "is": 1,
+              "the": 1,
+              "mean": 1,
+              "of": 1,
+              "debar": 1,
+              "in": 1,
+              "context": 1,
+              "student": 1,
+              "how": 1,
+              "many": 1,
+              "semest": 1,
+              "can": 1,
+              "be": 1,
+              "affect": 1,
+              "if": 1,
+              "a": 1,
+              "are": 1,
+              "there": 1,
+              "any": 1,
+              "way": 1,
+              "for": 1,
+              "to": 1,
+              "get": 1,
+              "exempt": 1,
+              "from": 1,
+              "common": 1,
+              "reason": 1,
+              "examin": 1,
+              "you": 1,
+              "provid": 1,
+              "more": 1,
+              "detail": 1,
+              "on": 1,
+              "such": 1,
+              "as": 1,
+              "low": 1,
+              "attend": 1,
+              "fee": 1,
+              "due": 1,
+              "or": 1,
+              "disciplinary": 1,
+              "action": 1,
+              "prevent": 1,
+              "avoid": 1,
+              "should": 1,
+              "do": 1,
+              "they": 1,
+              "believ": 1,
+              "have": 1,
+              "been": 1,
+              "wrongly": 1,
+              "academ": 1,
+              "consequ": 1,
+              "apart": 1,
+              "miss": 1,
+              "exam": 1
+            },
+            "intents": {
+              "Those students who fail in the 3 criteria mentioned by the EMS profile.": 1,
+              "Existing semester only.": 1,
+              "They can contact their HoD.": 1,
+              "Please refer to letter no. ...": 1,
+              "Contact your institute for further details.": 1,
+              "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.": 1,
+              "NO.": 1
+            },
+            "intentFeatures": {
+              "Those students who fail in the 3 criteria mentioned by the EMS profile.": {
+                "what": 1,
+                "is": 1,
+                "the": 1,
+                "mean": 1,
+                "of": 1,
+                "debar": 1,
+                "in": 1,
+                "context": 1,
+                "student": 1
+              },
+              "Existing semester only.": {
+                "how": 1,
+                "many": 1,
+                "semest": 1,
+                "can": 1,
+                "be": 1,
+                "affect": 1,
+                "if": 1,
+                "a": 1,
+                "student": 1,
+                "is": 1,
+                "debar": 1
+              },
+              "They can contact their HoD.": {
+                "are": 1,
+                "there": 1,
+                "any": 1,
+                "way": 1,
+                "for": 1,
+                "student": 1,
+                "to": 1,
+                "get": 1,
+                "exempt": 1,
+                "from": 1,
+                "debar": 1,
+                "what": 1,
+                "should": 1,
+                "a": 1,
+                "do": 1,
+                "if": 1,
+                "they": 1,
+                "believ": 1,
+                "have": 1,
+                "been": 1,
+                "wrongly": 1
+              },
+              "Please refer to letter no. ...": {
+                "what": 1,
+                "are": 1,
+                "the": 1,
+                "common": 1,
+                "reason": 1,
+                "for": 1,
+                "student": 1,
+                "to": 1,
+                "be": 1,
+                "debar": 1,
+                "from": 1,
+                "examin": 1
+              },
+              "Contact your institute for further details.": {
+                "can": 1,
+                "you": 1,
+                "provid": 1,
+                "more": 1,
+                "detail": 1,
+                "on": 1,
+                "the": 1,
+                "reason": 1,
+                "for": 1,
+                "debar": 1,
+                "such": 1,
+                "as": 1,
+                "low": 1,
+                "attend": 1,
+                "fee": 1,
+                "due": 1,
+                "or": 1,
+                "disciplinary": 1,
+                "action": 1
+              },
+              "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.": {
+                "how": 1,
+                "can": 1,
+                "student": 1,
+                "prevent": 1,
+                "or": 1,
+                "avoid": 1,
+                "be": 1,
+                "debar": 1,
+                "from": 1,
+                "examin": 1
+              },
+              "NO.": {
+                "are": 1,
+                "there": 1,
+                "any": 1,
+                "academ": 1,
+                "or": 1,
+                "disciplinary": 1,
+                "consequ": 1,
+                "for": 1,
+                "debar": 1,
+                "student": 1,
+                "apart": 1,
+                "from": 1,
+                "miss": 1,
+                "exam": 1
+              }
+            },
+            "featuresToIntent": {
+              "what": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "They can contact their HoD.",
+                "Please refer to letter no. ..."
+              ],
+              "is": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "Existing semester only."
+              ],
+              "the": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "Please refer to letter no. ...",
+                "Contact your institute for further details."
+              ],
+              "mean": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile."
+              ],
+              "of": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile."
+              ],
+              "debar": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "Existing semester only.",
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "Contact your institute for further details.",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+                "NO."
+              ],
+              "in": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile."
+              ],
+              "context": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile."
+              ],
+              "student": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "Existing semester only.",
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+                "NO."
+              ],
+              "how": [
+                "Existing semester only.",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "many": [
+                "Existing semester only."
+              ],
+              "semest": [
+                "Existing semester only."
+              ],
+              "can": [
+                "Existing semester only.",
+                "Contact your institute for further details.",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "be": [
+                "Existing semester only.",
+                "Please refer to letter no. ...",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "affect": [
+                "Existing semester only."
+              ],
+              "if": [
+                "Existing semester only.",
+                "They can contact their HoD."
+              ],
+              "a": [
+                "Existing semester only.",
+                "They can contact their HoD."
+              ],
+              "are": [
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "NO."
+              ],
+              "there": [
+                "They can contact their HoD.",
+                "NO."
+              ],
+              "any": [
+                "They can contact their HoD.",
+                "NO."
+              ],
+              "way": [
+                "They can contact their HoD."
+              ],
+              "for": [
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "Contact your institute for further details.",
+                "NO."
+              ],
+              "to": [
+                "They can contact their HoD.",
+                "Please refer to letter no. ..."
+              ],
+              "get": [
+                "They can contact their HoD."
+              ],
+              "exempt": [
+                "They can contact their HoD."
+              ],
+              "from": [
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+                "NO."
+              ],
+              "should": [
+                "They can contact their HoD."
+              ],
+              "do": [
+                "They can contact their HoD."
+              ],
+              "they": [
+                "They can contact their HoD."
+              ],
+              "believ": [
+                "They can contact their HoD."
+              ],
+              "have": [
+                "They can contact their HoD."
+              ],
+              "been": [
+                "They can contact their HoD."
+              ],
+              "wrongly": [
+                "They can contact their HoD."
+              ],
+              "common": [
+                "Please refer to letter no. ..."
+              ],
+              "reason": [
+                "Please refer to letter no. ...",
+                "Contact your institute for further details."
+              ],
+              "examin": [
+                "Please refer to letter no. ...",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "you": [
+                "Contact your institute for further details."
+              ],
+              "provid": [
+                "Contact your institute for further details."
+              ],
+              "more": [
+                "Contact your institute for further details."
+              ],
+              "detail": [
+                "Contact your institute for further details."
+              ],
+              "on": [
+                "Contact your institute for further details."
+              ],
+              "such": [
+                "Contact your institute for further details."
+              ],
+              "as": [
+                "Contact your institute for further details."
+              ],
+              "low": [
+                "Contact your institute for further details."
+              ],
+              "attend": [
+                "Contact your institute for further details."
+              ],
+              "fee": [
+                "Contact your institute for further details."
+              ],
+              "due": [
+                "Contact your institute for further details."
+              ],
+              "or": [
+                "Contact your institute for further details.",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+                "NO."
+              ],
+              "disciplinary": [
+                "Contact your institute for further details.",
+                "NO."
+              ],
+              "action": [
+                "Contact your institute for further details."
+              ],
+              "prevent": [
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "avoid": [
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+              ],
+              "academ": [
+                "NO."
+              ],
+              "consequ": [
+                "NO."
+              ],
+              "apart": [
+                "NO."
+              ],
+              "miss": [
+                "NO."
+              ],
+              "exam": [
+                "NO."
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true
+              },
+              "features": [
+                "what",
+                "is",
+                "the",
+                "mean",
+                "of",
+                "debar",
+                "in",
+                "context",
+                "student",
+                "how",
+                "many",
+                "semest",
+                "can",
+                "be",
+                "affect",
+                "if",
+                "a",
+                "are",
+                "there",
+                "any",
+                "way",
+                "for",
+                "to",
+                "get",
+                "exempt",
+                "from",
+                "common",
+                "reason",
+                "examin",
+                "you",
+                "provid",
+                "more",
+                "detail",
+                "on",
+                "such",
+                "as",
+                "low",
+                "attend",
+                "fee",
+                "due",
+                "or",
+                "disciplinary",
+                "action",
+                "prevent",
+                "avoid",
+                "should",
+                "do",
+                "they",
+                "believ",
+                "have",
+                "been",
+                "wrongly",
+                "academ",
+                "consequ",
+                "apart",
+                "miss",
+                "exam"
+              ],
+              "intents": [
+                "Those students who fail in the 3 criteria mentioned by the EMS profile.",
+                "Existing semester only.",
+                "They can contact their HoD.",
+                "Please refer to letter no. ...",
+                "Contact your institute for further details.",
+                "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance.",
+                "NO."
+              ],
+              "perceptrons": [
+                [
+                  1.2611550092697144,
+                  1.7391866445541382,
+                  1.5056426525115967,
+                  2.1097915172576904,
+                  2.1097915172576904,
+                  0.5091458559036255,
+                  2.1097915172576904,
+                  2.1097915172576904,
+                  0.634127676486969,
+                  -0.3531854748725891,
+                  -0.3035241961479187,
+                  -0.3035241961479187,
+                  -0.49956560134887695,
+                  -0.8662461042404175,
+                  -0.3035241961479187,
+                  -0.6813532114028931,
+                  -0.6813532114028931,
+                  -0.637381374835968,
+                  -0.14771997928619385,
+                  -0.14771997928619385,
+                  -0.14771997928619385,
+                  -0.7764797210693359,
+                  -0.637381374835968,
+                  -0.14771997928619385,
+                  -0.14771997928619385,
+                  -0.6827822327613831,
+                  -0.43070074915885925,
+                  -0.5710151791572571,
+                  -0.4773672819137573,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.13666240870952606,
+                  -0.09120427072048187,
+                  -0.09120427072048187,
+                  -0.021605530753731728,
+                  -0.021605530753731728,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  -0.28682172298431396,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0.234116900405655
+                ],
+                [
+                  -0.9098848104476929,
+                  1.7849162817001343,
+                  -0.5237976908683777,
+                  -0.20473125576972961,
+                  -0.20473125576972961,
+                  -0.0013560065999627113,
+                  -0.20473125576972961,
+                  -0.20473125576972961,
+                  0.11845553666353226,
+                  1.2181077003479004,
+                  2.0088748931884766,
+                  2.0088748931884766,
+                  1.098467469215393,
+                  1.0126644372940063,
+                  2.0088748931884766,
+                  1.5120553970336914,
+                  1.5120553970336914,
+                  -0.22227029502391815,
+                  -0.07733020931482315,
+                  -0.07733020931482315,
+                  -0.07733020931482315,
+                  -0.35283568501472473,
+                  -0.22227029502391815,
+                  -0.07733020931482315,
+                  -0.07733020931482315,
+                  -1.0388349294662476,
+                  -0.10644272714853287,
+                  -0.21999630331993103,
+                  -0.8914135098457336,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.8081294298171997,
+                  -0.06200287491083145,
+                  -0.06200287491083145,
+                  -0.6915144920349121,
+                  -0.6915144920349121,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  -0.3903885781764984,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -0.01142768340644718
+                ],
+                [
+                  0.1295582503080368,
+                  -0.8687655925750732,
+                  -1.3559752702713013,
+                  -0.3483585715293884,
+                  -0.3483585715293884,
+                  0.7070451974868774,
+                  -0.3483585715293884,
+                  -0.3483585715293884,
+                  0.8084957599639893,
+                  -0.5779713988304138,
+                  -0.40775999426841736,
+                  -0.40775999426841736,
+                  -0.6819086074829102,
+                  -1.5125364065170288,
+                  -0.40775999426841736,
+                  0.9379551410675049,
+                  0.9379551410675049,
+                  0.49711474776268005,
+                  1.3940980434417725,
+                  1.3940980434417725,
+                  2.3765320777893066,
+                  0.3956673741340637,
+                  1.4953569173812866,
+                  2.3765320777893066,
+                  2.3765320777893066,
+                  0.32251420617103577,
+                  -0.7904455661773682,
+                  -0.9007957577705383,
+                  -0.9695249199867249,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -0.05295366048812866,
+                  -1.161165714263916,
+                  -0.9888049364089966,
+                  -0.05295366048812866,
+                  -0.0903099924325943,
+                  -0.0903099924325943,
+                  1.456957459449768,
+                  1.456957459449768,
+                  1.456957459449768,
+                  1.456957459449768,
+                  1.456957459449768,
+                  1.456957459449768,
+                  1.456957459449768,
+                  -0.8875477910041809,
+                  -0.8875477910041809,
+                  -0.8875477910041809,
+                  -0.8875477910041809,
+                  -0.8875477910041809,
+                  0.3570332202390056
+                ],
+                [
+                  1.5167920589447021,
+                  -0.5312322974205017,
+                  1.4856972694396973,
+                  -0.487100213766098,
+                  -0.487100213766098,
+                  -0.4101482033729553,
+                  -0.487100213766098,
+                  -0.487100213766098,
+                  -0.13066545128822327,
+                  -0.567796528339386,
+                  -0.021673880517482758,
+                  -0.021673880517482758,
+                  -0.8483705520629883,
+                  1.688414454460144,
+                  -0.021673880517482758,
+                  -0.23430517315864563,
+                  -0.23430517315864563,
+                  1.2398146390914917,
+                  -0.9818734526634216,
+                  -0.9818734526634216,
+                  -0.6643787622451782,
+                  0.9604182839393616,
+                  1.556534767150879,
+                  -0.6643787622451782,
+                  -0.6643787622451782,
+                  0.682487428188324,
+                  2.269343852996826,
+                  1.9963760375976562,
+                  1.7301374673843384,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -0.20530100166797638,
+                  -1.126434564590454,
+                  -0.5209933519363403,
+                  -0.20530100166797638,
+                  -0.5227143168449402,
+                  -0.5227143168449402,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.17720599472522736,
+                  -0.22937247157096863,
+                  -0.22937247157096863,
+                  -0.22937247157096863,
+                  -0.22937247157096863,
+                  -0.22937247157096863,
+                  -0.21149769694365197
+                ],
+                [
+                  -0.3283945322036743,
+                  -0.1525363326072693,
+                  0.6530348062515259,
+                  -0.08673972636461258,
+                  -0.08673972636461258,
+                  -0.047271277755498886,
+                  -0.08673972636461258,
+                  -0.08673972636461258,
+                  -0.9457167387008667,
+                  -0.24110518395900726,
+                  -0.035811327397823334,
+                  -0.035811327397823334,
+                  0.6452285051345825,
+                  -0.40361690521240234,
+                  -0.035811327397823334,
+                  -0.10866668820381165,
+                  -0.10866668820381165,
+                  -0.42344045639038086,
+                  -0.25976061820983887,
+                  -0.25976061820983887,
+                  -0.009972779080271721,
+                  0.4570033550262451,
+                  -0.13016456365585327,
+                  -0.009972779080271721,
+                  -0.009972779080271721,
+                  -0.6527548432350159,
+                  -0.11281304061412811,
+                  0.7707324028015137,
+                  -0.33233949542045593,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.931526243686676,
+                  0.4191776216030121,
+                  0.6402040719985962,
+                  0.931526243686676,
+                  -0.1634218692779541,
+                  -0.1634218692779541,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.04903651401400566,
+                  -0.2138342410326004,
+                  -0.2138342410326004,
+                  -0.2138342410326004,
+                  -0.2138342410326004,
+                  -0.2138342410326004,
+                  -0.015112077546893386
+                ],
+                [
+                  -0.7774780988693237,
+                  -0.8742963075637817,
+                  -0.747997522354126,
+                  -0.12193390727043152,
+                  -0.12193390727043152,
+                  0.14673587679862976,
+                  -0.12193390727043152,
+                  -0.12193390727043152,
+                  0.26060155034065247,
+                  1.5482639074325562,
+                  -0.7064644694328308,
+                  -0.7064644694328308,
+                  1.4346649646759033,
+                  1.0409785509109497,
+                  -0.7064644694328308,
+                  -0.8517169952392578,
+                  -0.8517169952392578,
+                  -0.9344697594642639,
+                  -0.3755723237991333,
+                  -0.3755723237991333,
+                  -0.05976283177733421,
+                  -1.0553690195083618,
+                  -0.5795549750328064,
+                  -0.05976283177733421,
+                  -0.05976283177733421,
+                  1.4121711254119873,
+                  -0.4657200276851654,
+                  -0.5857924818992615,
+                  1.8816490173339844,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  -0.07668749243021011,
+                  1.9122434854507446,
+                  -0.40698790550231934,
+                  -0.07668749243021011,
+                  2.3713886737823486,
+                  2.3713886737823486,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.0773271769285202,
+                  -0.2519330084323883,
+                  -0.2519330084323883,
+                  -0.2519330084323883,
+                  -0.2519330084323883,
+                  -0.2519330084323883,
+                  0.06351668046666983
+                ],
+                [
+                  -0.33281418681144714,
+                  -0.20460695028305054,
+                  -0.5760964751243591,
+                  -0.0771455317735672,
+                  -0.0771455317735672,
+                  -0.2242729216814041,
+                  -0.0771455317735672,
+                  -0.0771455317735672,
+                  0.01812813989818096,
+                  -0.3190830945968628,
+                  -0.08932965248823166,
+                  -0.08932965248823166,
+                  -0.5613691210746765,
+                  -0.5911912322044373,
+                  -0.08932965248823166,
+                  -0.08932965248823166,
+                  -0.08932965248823166,
+                  0.5321544408798218,
+                  0.7975283265113831,
+                  0.7975283265113831,
+                  -0.8517870306968689,
+                  0.289844274520874,
+                  -1.1499217748641968,
+                  -0.8517870306968689,
+                  -0.8517870306968689,
+                  0.33964380621910095,
+                  -0.20029614865779877,
+                  -0.43113863468170166,
+                  -0.4210749864578247,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  -0.1625676304101944,
+                  1.3371728658676147,
+                  1.5260554552078247,
+                  -0.1625676304101944,
+                  -0.1565268337726593,
+                  -0.1565268337726593,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1.7620307207107544,
+                  1.7620307207107544,
+                  1.7620307207107544,
+                  1.7620307207107544,
+                  1.7620307207107544,
+                  -0.11798880951768484
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "What is the meaning of 'Debarred' in the context of students?"
+      ],
+      [
+        "en",
+        "How many semesters can be affected if a student is debarred?"
+      ],
+      [
+        "en",
+        "Are there any ways for students to get exempted from debarment?"
+      ],
+      [
+        "en",
+        "What are the common reasons for students to be debarred from examinations?"
+      ],
+      [
+        "en",
+        "Can you provide more details on the reasons for debarment, such as low attendance, fee dues, or disciplinary actions?"
+      ],
+      [
+        "en",
+        "How can students prevent or avoid being debarred from examinations?"
+      ],
+      [
+        "en",
+        "What should a student do if they believe they have been wrongly debarred?"
+      ],
+      [
+        "en",
+        "Are there any academic or disciplinary consequences for debarred students apart from missing exams?"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {
+      "en": {
+        "What is the meaning of 'Debarred' in the context of students?": [
+          {
+            "answer": "Those students who fail in the 3 criteria mentioned by the EMS profile."
+          }
+        ],
+        "How many semesters can be affected if a student is debarred?": [
+          {
+            "answer": "Existing semester only."
+          }
+        ],
+        "Are there any ways for students to get exempted from debarment?": [
+          {
+            "answer": "They can contact their HoD."
+          }
+        ],
+        "What are the common reasons for students to be debarred from examinations?": [
+          {
+            "answer": "Please refer to letter no. ..."
+          }
+        ],
+        "Can you provide more details on the reasons for debarment, such as low attendance, fee dues, or disciplinary actions?": [
+          {
+            "answer": "Contact your institute for further details."
+          }
+        ],
+        "How can students prevent or avoid being debarred from examinations?": [
+          {
+            "answer": "(1) By paying prescribed fee on time.\\n(2) By conforming to rules and regulations of the institute.\\n(3) By having 75% attendance."
+          }
+        ],
+        "What should a student do if they believe they have been wrongly debarred?": [
+          {
+            "answer": "They can contact their HoD."
+          }
+        ],
+        "Are there any academic or disciplinary consequences for debarred students apart from missing exams?": [
+          {
+            "answer": "NO."
+          }
+        ]
+      }
+    }
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}

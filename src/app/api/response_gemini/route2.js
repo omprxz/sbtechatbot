@@ -12,9 +12,9 @@ export async function POST(request) {
   if (!studentQuery) {
     return NextResponse.json({ error: "Query parameter 'q' is required." }, { status: 400 });
   }
-
+let connection;
   try {
-    const connection = await db();
+    connection = await db();
 
     const [rows] = await connection.query(
       "SELECT question, answer FROM dataset_questions WHERE status = 'active'"
@@ -99,5 +99,9 @@ const appendToChat = await connection.execute(appendToChatSql, [
   } catch (error) {
     console.error("Error generating response:", error);
     return NextResponse.json({ response: error.message }, { status: 500 });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
   }
 }
