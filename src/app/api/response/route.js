@@ -9,7 +9,6 @@ let genAI;
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
   genAI = new GoogleGenerativeAI(apiKey);
-  console.log("Generative AI initialized");
 };
 
 const fetchQuestionsList = async () => {
@@ -18,7 +17,6 @@ const fetchQuestionsList = async () => {
     "SELECT question, answer FROM dataset_questions WHERE status = 'active'"
   );
   questionsList = rows;
-  console.log("Questions list fetched from database:", questionsList);
 };
 
 const genAIQuery = async (question, chatHistory = []) => {
@@ -36,7 +34,6 @@ const genAIQuery = async (question, chatHistory = []) => {
     responseMimeType: "text/plain",
   };
 
-  console.log("Generating response from GenAI for question:", question);
   let chatSession;
   if (chatHistory) {
     const history = chatHistory.map((message) => ({
@@ -47,7 +44,6 @@ const genAIQuery = async (question, chatHistory = []) => {
       generationConfig,
       history,
     });
-    console.log("Chat history included in GenAI query:", chatHistory);
   } else {
     chatSession = model.startChat({
       generationConfig,
@@ -55,7 +51,6 @@ const genAIQuery = async (question, chatHistory = []) => {
   }
 
   const result = await chatSession.sendMessage(question);
-  console.log("GenAI response:", result.response.text());
   return result.response.text();
 };
 
@@ -69,10 +64,8 @@ export async function POST(request) {
       isFirst,
       history: chatHistory,
     } = await request.json();
-    console.log("Received user question:", userQuestion);
 
     if (!userQuestion) {
-      console.log("No user question provided");
       return NextResponse.json(
         { error: "User question is required" },
         { status: 400 }
@@ -90,19 +83,15 @@ export async function POST(request) {
     let bestMatch = { question: null, answer: null, score: 0 };
     questionsList.forEach(({ question, answer }) => {
       const similarity = natural.JaroWinklerDistance(userQuestion, question);
-      console.log(`Comparing with question: "${question}" - Similarity:`, similarity);
       if (similarity > bestMatch.score) {
         bestMatch = { question, answer, score: similarity };
       }
     });
-    console.log("Best match found:", bestMatch);
 
     let finalAnswer;
     if (bestMatch.score > 0.8) {
-      console.log("Best match above threshold, using pre-defined answer.");
       finalAnswer = bestMatch.answer;
     } else {
-      console.log("No adequate match found, proceeding with GenAI.");
       const genAIAnswer = await genAIQuery(userQuestion);
       finalAnswer =
         genAIAnswer || "I'm still learning and don't have an answer for that.";
@@ -115,14 +104,12 @@ export async function POST(request) {
       ip,
       Number(chatId),
     ]);
-    console.log("Question logged in database with ID:", messageResult.insertId);
 
     const updateAnswerSql = `UPDATE chatbot_questions SET answer = ? WHERE id = ?`;
     await connection.execute(updateAnswerSql, [
       finalAnswer,
       messageResult.insertId,
     ]);
-    console.log("Answer updated in database for question ID:", messageResult.insertId);
 
     const appendToChatSql = `
       UPDATE chat_sessions 
@@ -137,7 +124,6 @@ export async function POST(request) {
       messageResult.insertId,
       chatId,
     ]);
-    console.log("Message ID appended to chat session:", chatId);
 
     return NextResponse.json({ answer: finalAnswer });
   } catch (error) {
@@ -149,7 +135,6 @@ export async function POST(request) {
   } finally {
     if (connection) {
       await connection.end();
-      console.log("Database connection closed.");
     }
   }
 }
