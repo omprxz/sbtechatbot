@@ -82,7 +82,7 @@ export async function POST(request) {
 
     let bestMatch = { question: null, answer: null, score: 0 };
     questionsList.forEach(({ question, answer }) => {
-      const similarity = natural.JaroWinklerDistance(userQuestion, question);
+      const similarity = natural.JaroWinklerDistance(userQuestion.toLowerCase(), question.toLowerCase());
       if (similarity > bestMatch.score) {
         bestMatch = { question, answer, score: similarity };
       }
