@@ -12,7 +12,7 @@ function Question({ text, handleQuickSend }) {
     <motion.button
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.95 }}
-      className="px-3 py-2 bg-primary/10 text-primary rounded-full text-sm whitespace-nowrap"
+      className="px-3 py-2 bg-blue-500/10 text-blue-500 rounded-full text-sm whitespace-nowrap"
       onClick={() => handleQuickSend(text)}
     >
       {text}
@@ -39,14 +39,16 @@ export default function Chat() {
       if (userInput.length >= 3) {
         setDebouncedValue(userInput);
       } else if (userInput.length === 0) {
+        if(isExpanded){
         getSuggestedQuestions();
+        }
       }
     }, 400);
     return () => clearTimeout(handler);
   }, [userInput]);
 
   useEffect(() => {
-    if (debouncedValue) {
+    if (debouncedValue && debouncedValue.length >= 3 && isExpanded) {
       getQuickInputQuestions(debouncedValue);
     }
   }, [debouncedValue]);

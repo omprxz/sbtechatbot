@@ -89,10 +89,10 @@ export async function POST(request) {
     });
 
     let finalAnswer;
-    if (bestMatch.score > 0.8) {
+    if (bestMatch.score > 0.7) {
       finalAnswer = bestMatch.answer;
     } else {
-      const genAIAnswer = await genAIQuery(userQuestion);
+      const genAIAnswer = await genAIQuery(userQuestion, [...chatHistory]);
       finalAnswer =
         genAIAnswer || "I'm still learning and don't have an answer for that.";
     }

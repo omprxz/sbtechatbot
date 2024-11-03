@@ -26,7 +26,6 @@
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
-    "daisyui": "^4.12.13",
     "eslint": "^8",
     "eslint-config-next": "15.0.1",
     "postcss": "^8",
